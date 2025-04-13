@@ -206,12 +206,17 @@ ui <- fluidPage(
     actionButton("abrir_modal_baixar", "⬇️ Baixar Dados", 
                  class = "btn btn-success btn-sm", 
                  style = "width: 100%; margin-bottom: 10px; font-weight: bold;"),
-    downloadButton("botao_real_baixar", label = NULL, style = "display:none;"),
+    downloadButton("botao_real_baixar", label = "Baixar Dados", 
+                   class = "btn btn-success btn-sm",
+                   style = "width: 100%; margin-bottom: 10px; font-weight: bold;"),
+    
+    # No UI.R, altere os valores iniciais:
     dateRangeInput("data_range", "Período:", 
-                   start = Sys.Date() - 7, 
-                   end = Sys.Date()),
+                   start = Sys.Date() - 30,  # Período maior
+                   end = Sys.Date() + 1),     # Inclui hoje
+    
     sliderInput("hora_range", "Horário (hora):", 
-                min = 0, max = 23, value = c(8, 18))
+                min = 0, max = 23, value = c(0, 23))  # Todo o dia
   )
 )
 
@@ -364,7 +369,8 @@ server <- function(input, output, session) {
     })
   })
   
-  # Baixar dados
+  # Remove o modal de senha e usa o botão diretamente
+  # Modal de senha (opcional)
   observeEvent(input$abrir_modal_baixar, {
     showModal(modalDialog(
       title = "Digite a Senha para Baixar os Dados",
@@ -376,6 +382,7 @@ server <- function(input, output, session) {
     ))
   })
   
+  # Validação da senha
   observeEvent(input$confirmar_baixar, {
     if(input$senha_baixar == "tchau") {
       removeModal()
@@ -384,16 +391,22 @@ server <- function(input, output, session) {
       showNotification("Senha incorreta!", type = "error")
     }
   })
-  
+  # Handler de download corrigido
   output$botao_real_baixar <- downloadHandler(
     filename = function() {
       paste0("dados_visitantes_", format(Sys.Date(), "%Y%m%d"), ".csv")
     },
     content = function(file) {
-      write.csv(rv$data, file, row.names = FALSE)
+      req(nrow(rv$data) > 0) # Garante que há dados
+      
+      # Formata as colunas de data/hora
+      dados_export <- rv$data %>%
+        mutate(Hora_Participacao = format(Hora_Participacao, "%Y-%m-%d %H:%M:%S"))
+      
+      # Escreve o arquivo CSV
+      write.csv(dados_export, file, row.names = FALSE, fileEncoding = "UTF-8")
     }
   )
-  
   # Dados filtrados
   dados_filtrados <- reactive({
     req(nrow(rv$data) > 0)
@@ -414,8 +427,14 @@ server <- function(input, output, session) {
   # Tabela de visitantes
   output$tabela <- renderDT({
     req(nrow(dados_filtrados()) > 0)
+    
+    # Formata Hora_Participacao (MM/DD HH:MM) e remove colunas Data/Hora
+    dados_formatados <- dados_filtrados() %>%
+      mutate(Hora_Participacao = format(Hora_Participacao, "%m/%d %H:%M")) %>%
+      select(-Data, -Hora)  # Remove as colunas
+    
     datatable(
-      dados_filtrados(),
+      dados_formatados,
       options = list(
         pageLength = 5,
         autoWidth = TRUE,
@@ -425,7 +444,6 @@ server <- function(input, output, session) {
       style = "bootstrap"
     )
   })
-  
   # 1. Gráfico de densidade por idade, escola e gênero
   output$grafico_idade_escola <- renderPlot({
     req(nrow(dados_filtrados()) > 0)
