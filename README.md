@@ -2,7 +2,7 @@
 
 👥 Quem Somos
 
-Somos Nathanael Melo Galvão (matrícula: 202503535) e Igor Rodrigues Soares (matrícula: 20250000), estudantes do 1º semestre do curso de Estatística da Universidade Federal de Goiás (UFG). Desenvolvemos este sistema como parte de uma atividade prática para a Feira das Profissões, com o objetivo de aplicar conceitos de coleta, tratamento e visualização de dados em tempo real.
+Somos Nathanael Melo Galvão e Igor Rodrigues Soares , estudantes do 1º semestre do curso de Estatística da Universidade Federal de Goiás (UFG). Desenvolvemos este sistema como parte de uma atividade prática para a Feira das Profissões, com o objetivo de aplicar conceitos de coleta, tratamento e visualização de dados em tempo real.
 
 🧠 Objetivo do Projeto
 
