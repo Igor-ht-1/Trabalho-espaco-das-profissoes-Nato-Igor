@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Certificado de Participação</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    body {
+      font-family: 'Georgia', serif;
+      background: #f2f2f2;
+      padding: 30px;
+    }
+    .certificado {
+      background: #fff;
+      border: 8px double #1f6f8b;
+      padding: 60px;
+      max-width: 800px;
+      margin: auto;
+      box-shadow: 0 0 25px rgba(0,0,0,0.15);
+      text-align: center;
+      border-radius: 16px;
+      position: relative;
+    }
+    h1 {
+      font-size: 36px;
+      color: #1f6f8b;
+      margin-bottom: 20px;
+    }
+    .texto {
+      font-size: 18px;
+      color: #333;
+      margin: 10px 0;
+    }
+    .data {
+      margin-top: 50px;
+      font-size: 16px;
+    }
+    .assinatura {
+      margin-top: 60px;
+    }
+    .linha {
+      width: 300px;
+      border-top: 1px solid #444;
+      margin: 0 auto;
+    }
+    .cargo {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #333;
+    }
+    .redes-sociais {
+      margin-top: 50px;
+      font-size: 15px;
+      color: #555;
+    }
+    .instagrams {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #555;
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    .instagrams a {
+      text-decoration: none;
+      color: #1f6f8b;
+      font-weight: bold;
+    }
+    .instagrams a:hover {
+      text-decoration: underline;
+    }
+    .botoes {
+      text-align: center;
+      margin: 40px auto 20px;
+    }
+    .botoes input, .botoes button {
+      padding: 10px 15px;
+      margin: 5px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
+    }
+    .botoes button {
+      background-color: #1f6f8b;
+      color: white;
+      cursor: pointer;
+    }
+    .botoes button:hover {
+      background-color: #155c6f;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="botoes">
+    <input type="date" id="dataInput" />
+    <button onclick="atualizarData()">Atualizar Data</button>
+    <button onclick="baixarPDF()">Baixar Certificado</button>
+  </div>
+
+  <div class="certificado" id="certificado">
+    <h1>CERTIFICADO DE PARTICIPAÇÃO</h1>
+
+    <p class="texto">Certificamos que você</p>
+    <p class="texto">participou da atividade interativa promovida pelo curso de <strong>Estatística</strong> durante a</p>
+    <p class="texto"><strong>Feira de Profissões da Universidade Federal de Goiás</strong>, contribuindo para a divulgação da Estatística como ciência essencial à sociedade.</p>
+
+    <p class="data" id="dataCertificado">Goiânia, 06 de Maio de 2025</p>
+
+    <div class="assinatura">
+      <div class="linha"></div>
+      <p class="cargo">Equipe de Estatística - IME/UFG</p>
+    </div>
+
+    <div class="redes-sociais">
+      Siga as redes sociais da UFG e do IME:
+      <div class="instagrams">
+        <a href="https://www.instagram.com/problematicaufg" target="_blank">@problematicaufg</a>
+        <a href="https://www.instagram.com/ime_ufg" target="_blank">@ime_ufg</a>
+        <a href="https://www.instagram.com/ufg_oficial" target="_blank">@ufg_oficial</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function atualizarData() {
+      const input = document.getElementById('dataInput').value;
+      if (!input) return;
+      const [ano, mes, dia] = input.split('-');
+      const meses = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+      const dataFormatada = `Goiânia, ${dia} de ${meses[parseInt(mes)-1]} de ${ano}`;
+      document.getElementById('dataCertificado').textContent = dataFormatada;
+    }
+
+    function baixarPDF() {
+      const element = document.getElementById('certificado');
+      html2pdf().from(element).set({
+        margin: 0.5,
+        filename: 'certificado.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+      }).save();
+    }
+  </script>
+</body>
+</html>
