@@ -1,3 +1,5 @@
+#install.packages(c("shiny", "shinyjs", "DT", "ggplot2", "bslib", "dplyr","lubridate", "shinyFeedback", "tidyr", "ggridges"))
+
 library(shiny)
 library(shinyjs)
 library(DT)
@@ -355,7 +357,8 @@ server <- function(input, output, session) {
         }
       }
       
-      rv$data <- dados
+      # Adicionar dados carregados aos dados existentes
+      rv$data <- bind_rows(rv$data, dados)
       
       datas <- as.Date(dados$Hora_Participacao)
       updateDateRangeInput(session, "data_range",
@@ -368,6 +371,7 @@ server <- function(input, output, session) {
       showNotification(paste("Erro ao carregar arquivo:", e$message), type = "error")
     })
   })
+  
   
   # Remove o modal de senha e usa o botão diretamente
   # Modal de senha (opcional)
