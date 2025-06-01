@@ -1,4 +1,4 @@
-https://github.com/Igor-ht-1/Trade_Ai.git
+
 
 🎓 Apresentação do Sistema de Coleta e Visualização de Dados da Feira das Profissões - IME/UFG
 
